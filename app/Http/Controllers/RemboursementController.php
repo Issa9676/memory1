@@ -105,10 +105,42 @@ class remboursementController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    
+
+public function update(Request $request, string $id)
     {
-        //
+        // 1. Récupérer le remboursement ou renvoyer une erreur 404
+        $remboursement = remboursement::findOrFail($id);
+
+        // 2. Vérification de sécurité : Seul l'admin peut traiter
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->back()->with('error', 'Vous n\'avez pas l\'autorisation d\'effectuer cette action.');
+        }
+
+        // 3. Validation des données entrantes
+        $request->validate([
+            'statut' => 'required|in:approuve,rejete',
+            'notes' => 'required_if:statut,rejete|nullable|string|max:1000',
+        ], [
+            'notes.required_if' => 'Le motif est obligatoire en cas de rejet pour informer le membre.',
+        ]);
+
+        // 4. Mise à jour des données
+        $remboursement->update([
+            'statut' => $request->statut,
+            'notes' => $request->notes, // Assure-toi que la colonne 'notes' existe dans ta table
+        ]);
+
+        // 5. Redirection avec message de succès
+        $types =($request->statut === 'approuve') ? 'success': 'error';
+        $message = ($request->statut === 'approuve') 
+            ? "Le remboursement de {$remboursement->user->name} a été approuvé."
+            : "La demande de remboursement a été rejetée.";
+
+        return redirect()->back()->with($types, $message);
     }
+    
+
 
     /**
      * Remove the specified resource from storage.

@@ -33,45 +33,40 @@
                         <td>{{ $cotisation->annee }}</td>
                         <td>{{ number_format($cotisation->montant, 0, ',', ' ') }} FCFA</td>
                         <td>{{ $cotisation->mode_paiement}}</td>
-                       <td id="statut-text-{{ $cotisation->id }}">
+                    
+                       
+                       
+                       <td class="text-center align-middle" id="status-badge-{{ $cotisation->id }}">
     @if($cotisation->statut === 'paye')
-        <span class="badge bg-success-soft text-success">Payé</span>
+        <span class="badge rounded-pill bg-success px-3" style="font-weight: 500;">Payé</span>
     @else
-        <span class="badge bg-danger-soft text-danger">Impayé</span>
+        <span class="badge rounded-pill bg-warning text-dark px-3" style="font-weight: 500;">Impayé</span>
     @endif
 </td>
 
-<td id="status-container-{{ $cotisation->id }}">
-    <button onclick="changeStatus({{ $cotisation->id }})" 
-            class="btn btn-sm {{ $cotisation->statut === 'paye' ? 'btn-outline-danger' : 'btn-outline-success' }}" 
-            title="{{ $cotisation->statut === 'paye' ? 'Marquer comme impayé' : 'Marquer comme payé' }}">
-        <i class="fas {{ $cotisation->statut === 'paye' ? 'fa-times' : 'fa-check' }}"></i>
-        {{ $cotisation->statut === 'paye' ? 'Annuler' : 'Valider' }}
-    </button>
-</td>
-						<td>
+<td class="py-2 text-center">
                             @if($cotisation->preuve_paiement)
-                                <a href="{{ asset('storage/' . $cotisation->preuve_paiement) }}" target="_blank" class="btn btn-sm btn-outline-primary">Voir reçu</a>
+                                <a href="{{ asset('storage/' . $cotisation->preuve_paiement) }}" target="_blank" class="text-primary" title="Voir reçu">
+                                    <i class="fas fa-file-invoice fa-lg"></i>
+                                </a>
                             @else
-                                <span class="text-muted">Aucune</span>
+                                <i class="fas fa-times text-light"></i>
                             @endif
                         </td>
-                        <td id="statut-text-{{ $cotisation->id }}">
-    @if($cotisation->statut === 'paye')
-        <span class="badge bg-success-soft text-success">Payé</span>
-    @else
-        <span class="badge bg-danger-soft text-danger">Impayé</span>
-    @endif
-</td>
 
-<td id="status-container-{{ $cotisation->id }}">
-    <button onclick="changeStatus({{ $cotisation->id }})" 
-            class="btn btn-sm {{ $cotisation->statut === 'paye' ? 'btn-outline-danger' : 'btn-outline-success' }}" 
-            title="{{ $cotisation->statut === 'paye' ? 'Marquer comme impayé' : 'Marquer comme payé' }}">
-        <i class="fas {{ $cotisation->statut === 'paye' ? 'fa-times' : 'fa-check' }}"></i>
-        {{ $cotisation->statut === 'paye' ? 'Annuler' : 'Valider' }}
-    </button>
+
+<td class="text-center align-middle" id="action-container-{{ $cotisation->id }}">
+    <div class="form-check form-switch d-inline-block shadow-sm rounded p-1 px-2 border bg-white">
+        <input class="form-check-input ms-0 cursor-pointer" 
+               type="checkbox" 
+               role="switch" 
+               style="width: 2.5em; height: 1.2em;"
+               {{ $cotisation->statut === 'paye' ? 'checked' : '' }}
+               onchange="changeStatus({{ $cotisation->id }})">
+    </div>
 </td>
+                       
+     
                     </tr>
                     @endforeach
 		
@@ -98,6 +93,7 @@
 						        </div><!--//table-responsive-->
 						<script>
 function changeStatus(id) {
+    // On ne bloque pas l'UI, on envoie direct
     fetch(`/cotisations/${id}/toggle-status`, {
         method: 'POST',
         headers: {
@@ -109,25 +105,21 @@ function changeStatus(id) {
     .then(response => response.json())
     .then(data => {
         if(data.success) {
-           
-            const statutCell = document.getElementById(`statut-text-${id}`);
-            if(statutCell) statutCell.innerText = data.new_status;
-
-            // 2. Mettre à jour les boutons dans la colonne "Actions"
-            const actionContainer = document.getElementById(`status-container-${id}`);
-            
-            // On reconstruit proprement le HTML du bouton
-            const colorClass = data.new_status === 'paye' ? 'bg-success' : 'bg-danger';
-            const label = data.new_status === 'paye' ? 'Payé' : 'Impayé';
-
-            actionContainer.innerHTML = `
-                <button onclick="changeStatus(${id})" class="badge ${colorClass}" style="border:none; cursor:pointer;">
-                    ${label}
-                </button>
-            `;
+            // Mise à jour du badge de statut uniquement
+            const badgeContainer = document.getElementById(`status-badge-${id}`);
+            if(data.new_status === 'paye') {
+                badgeContainer.innerHTML = '<span class="badge bg-success" style="font-size: 0.7rem;">PAYÉ</span>';
+            } else {
+                badgeContainer.innerHTML = '<span class="badge bg-warning text-dark" style="font-size: 0.7rem;">IMPAYÉ</span>';
+            }
+        } else {
+            alert("Erreur de mise à jour");
+            location.reload(); // En cas d'erreur, on refresh pour être sûr du statut
         }
     })
-    .catch(error => console.error('Erreur:', error));
+    .catch(error => {
+        console.error('Erreur:', error);
+        location.reload();
+    });
 }
-
-</script>   
+</script>

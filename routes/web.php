@@ -55,11 +55,11 @@ $nomsMois = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept'
 // Cotisations
 $cotisDataRaw = cotisation::where('statut', 'paye')
     ->where('annee', date('Y'))
-    ->selectRaw('mois, SUM(montant) as total')
-    ->groupBy('mois')
-    ->pluck('total', 'mois')
+    ->selectRaw('(mois + 0) as mois_num, SUM(montant) as total')
+    ->groupBy('mois_num')
+    ->pluck('total', 'mois_num')
     ->toArray();
-$finalCotisMensuelles = array_replace($tousLesMois, $cotisDataRaw);
+$finalCotisMensuelles = array_values(array_replace($tousLesMois, $cotisDataRaw));
 
 // Remboursements
 $rembDataRaw = remboursement::where('statut', 'approuve')
@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('cotisations', CotisationController::class );
     Route::resource('remboursements', RemboursementController::class );
      Route::resource('etablissements', EtablissementController::class );
+      Route::put('/remboursements/{id}', [RemboursementController::class, 'update'])->name('remboursements.update');
      Route::post ('/cotisations/{id}/toggle-status', [CotisationController::class, 'toggleStatus'])->name('cotisations.toggle');
 
 });

@@ -777,6 +777,38 @@
 	</div>
 </form>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Sélection des éléments
+    const montantInput = document.getElementById('montant_facture');
+    const selectEtab = document.getElementById('etablissement_id');
+    const estimationSpan = document.getElementById('montant_estime');
+
+    // 2. Fonction de calcul
+    function calculerRemboursement() {
+        // Récupère la valeur saisie
+        let montant = parseFloat(montantInput.value) || 0;
+        
+        // Récupère le taux dynamique de l'établissement sélectionné
+        // Si aucune option n'est choisie, on utilise 0
+        let selectedOption = selectEtab.options[selectEtab.selectedIndex];
+        let taux = selectedOption ? parseFloat(selectedOption.getAttribute('data-taux')) : 0;
+        
+        // Calcul (Ex: 10 000 * 70 / 100 = 7 000)
+        let resultat = (montant * taux) / 100;
+        
+        // Mise à jour de l'affichage dans la modale
+        estimationSpan.innerText = new Intl.NumberFormat('fr-FR').format(resultat);
+    }
+
+    // 3. Écouteurs d'événements
+    if(montantInput && selectEtab) {
+        montantInput.addEventListener('input', calculerRemboursement);
+        selectEtab.addEventListener('change', calculerRemboursement);
+    }
+});
+</script>
+
 </div>
         </div>
     </div>
@@ -982,7 +1014,7 @@
      <div class="col-6 col-lg">
         <div class="app-card app-card-stat shadow-sm h-100 border-bottom-secondary border-success">
             <div class="app-card-body p-3 p-lg-4 text-center">
-                <h4 class="stats-type mb-1 text-success"><i class="fa-solid fa-users me-2"></i>MEMBRES Inactifs</h4>
+                <h4 class="stats-type mb-1 text-red"><i class="fa-solid fa-users me-2"></i>MEMBRES Inactifs</h4>
                 <div class="stats-figure font-weight-bold">{{ $membresInactifs }}</div>
             </div>
         </div>
@@ -992,7 +1024,7 @@
      <div class="col-6 col-lg">
         <div class="app-card app-card-stat shadow-sm h-100 border-bottom-secondary border-success">
             <div class="app-card-body p-3 p-lg-4 text-center">
-                <h4 class="stats-type mb-1 text-success"><i class="fa-solid fa-users me-2"></i>MEMBRES Supendus</h4>
+                <h4 class="stats-type mb-1 text-danger"><i class="fa-solid fa-users me-2"></i>MEMBRES Supendus</h4>
                 <div class="stats-figure font-weight-bold">{{ $membresSuspendu }}</div>
             </div>
         </div>
@@ -1176,6 +1208,7 @@ function remplirModaleEdit(user) {
     document.getElementById('edit_statut').value = user.statut;
 }
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 // Récupération des données PHP
