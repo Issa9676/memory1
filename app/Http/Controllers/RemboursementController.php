@@ -1,0 +1,157 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\remboursement;
+use Illuminate\Http\Request;
+use App\Models\Etablissement;
+use App\Models\Beneficiaire;
+class remboursementController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+     $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        // L'admin voit tout, avec les infos de l'utilisateur et de l'établissement
+        $remboursements = remboursement::with(['user', 'etablissement'])->latest()->get();
+    } else {
+        // Le membre ne voit que ses propres demandes
+        $remboursements = remboursement::where('user_id', $user->id)->with('etablissement')->latest()->get();
+    }
+
+    return view('remboursements.index', compact('remboursements'));   
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $etablissements = Etablissement::all();
+        return view('remboursements.create', compact('etablissements'));
+        
+        $membres = User::where('role', 'membre')->with('beneficiaires')->get();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+         // 1. Validation de base des entrées
+    $request->validate([
+        'user_id'=>'required|exists:users,id',
+        'etablissement_id' => 'required|exists:etablissements,id',
+        'beneficiaire_id' => 'nullable|exists:beneficiaires,id', // Peut être null si c'est le titulaire
+        'montant_facture' => 'required|numeric|min:1',
+        'motif' => 'required|string|max:255',
+        'facture_path' => 'required|image|mimes:jpeg,png,jpg|max:2048', // 2MB max
+    ]);
+    
+    $targetUserId = $request->user_id;
+
+    // 2. LE GARDE-FOU : Vérification des cotisations impayées
+    $cotisationsImpayees = \App\Models\cotisation::where('user_id', $targetUserId)
+        ->where('statut', 'impaye')
+        ->exists();
+
+   if ($cotisationsImpayees) {
+        return back()->withErrors(['error' => 'Action impossible : Vous avez des cotisations en attente de paiement.']);
+    }
+
+    // 3. RÉCUPÉRATION DU TAUX RÉEL (Sécurité Serveur)
+    $etablissement = \App\Models\Etablissement::findOrFail($request->etablissement_id);
+    $taux = $etablissement->taux_prise_en_charge / 100;
+    
+    // Calcul automatique du montant à rembourser
+    $montantRembourse = $request->montant_facture * $taux;
+
+    // 4. GESTION DU FICHIER (Stockage)
+    if ($request->hasFile('facture_path')) {
+        $path = $request->file('facture_path')->store('factures', 'public');
+    }
+
+    // 5. CRÉATION DE L'ENREGISTREMENT
+    \App\Models\remboursement::create([
+        'user_id' => $targetUserId,
+        'etablissement_id' => $etablissement->id,
+        'beneficiaire_id' => $request->beneficiaire_id,
+        'montant_facture' => $request->montant_facture,
+        'montant_rembourse' => $montantRembourse,
+        'facture_path' => $path ?? null,
+        'motif' => $request->motif,
+        'statut' => 'en_attente',
+        'date_demande' => now(),
+    ]);
+
+    return redirect()->route('dashboard', ['view' => 'remboursements'])->with('success', 'Votre demande a été soumise avec succès.');
+        
+    }
+
+   
+
+
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    
+
+public function update(Request $request, string $id)
+    {
+        // 1. Récupérer le remboursement ou renvoyer une erreur 404
+        $remboursement = remboursement::findOrFail($id);
+
+        // 2. Vérification de sécurité : Seul l'admin peut traiter
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->back()->with('error', 'Vous n\'avez pas l\'autorisation d\'effectuer cette action.');
+        }
+
+        // 3. Validation des données entrantes
+        $request->validate([
+            'statut' => 'required|in:approuve,rejete',
+            'notes' => 'required_if:statut,rejete|nullable|string|max:1000',
+        ], [
+            'notes.required_if' => 'Le motif est obligatoire en cas de rejet pour informer le membre.',
+        ]);
+
+        // 4. Mise à jour des données
+        $remboursement->update([
+            'statut' => $request->statut,
+            'notes' => $request->notes, // Assure-toi que la colonne 'notes' existe dans ta table
+        ]);
+
+        // 5. Redirection avec message de succès
+        $types =($request->statut === 'approuve') ? 'success': 'error';
+        $message = ($request->statut === 'approuve') 
+            ? "Le remboursement de {$remboursement->user->name} a été approuvé."
+            : "La demande de remboursement a été rejetée.";
+
+        return redirect()->back()->with($types, $message);
+    }
+    
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}
