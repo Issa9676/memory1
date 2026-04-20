@@ -5,11 +5,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Models\cotisation;
 use App\Models\remboursement;
+use App\Models\Beneficiaire;
 use App\Models\Etablissement;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\RemboursementController;
 use App\Http\Controllers\EtablissementController;
+use App\Http\Controllers\BeneficiaireController;
 
 
 Route::get('/', function () {
@@ -109,11 +111,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('users', UserController::class );
     Route::resource('cotisations', CotisationController::class );
+Route::resource('users.beneficiaires', BeneficiaireController::class)->except(['show']);
     Route::resource('remboursements', RemboursementController::class );
      Route::resource('etablissements', EtablissementController::class );
       Route::put('/remboursements/{id}', [RemboursementController::class, 'update'])->name('remboursements.update');
      Route::post ('/cotisations/{id}/toggle-status', [CotisationController::class, 'toggleStatus'])->name('cotisations.toggle');
-
+        Route::post('/cotisations/generer', [CotisationController::class, 'generer'])->name('cotisations.generer');
+Route::resource('users.beneficiaires', BeneficiaireController::class)->except(['show']);
+// Routes AJAX pour les bénéficiaires (à mettre avant la route resource si elle existe)
+Route::get('/users/{user}/beneficiaires-data', [BeneficiaireController::class, 'getData']);
+Route::get('/beneficiaires/{id}', [BeneficiaireController::class, 'getOne']);
+Route::post('/users/{user}/beneficiaires', [BeneficiaireController::class, 'storeAjax']);
+Route::put('/beneficiaires/{id}', [BeneficiaireController::class, 'updateAjax']);
+Route::delete('/beneficiaires/{id}', [BeneficiaireController::class, 'destroyAjax']);
 });
 
 

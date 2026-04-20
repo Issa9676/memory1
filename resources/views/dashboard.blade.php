@@ -227,7 +227,7 @@
 						         </span>
 		                         <span class="nav-link-text">Rembourssements</span>
 		                         <span class="submenu-arrow">
-		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+		                             <svg width="1em" height="1em" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
 	</svg>
 	                             </span><!--//submenu-arrow-->
@@ -244,42 +244,7 @@
     </a>
 </li>
 					   
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link" href="charts.html">
-						        <span class="nav-icon">
-						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bar-chart-line" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd" d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"/>
-	</svg>
-						         </span>
-		                         <span class="nav-link-text">Rapports</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
 					    
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link" href="help.html">
-						        <span class="nav-icon">
-						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-</svg>
-						         </span>
-		                         <span class="nav-link-text">Help</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-						<li class="nav-item">
-						        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-						        <a class="nav-link" href="settings.html">
-							        <span class="nav-icon">
-							            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd" d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"/>
-	  <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z"/>
-	</svg>
-							        </span>
-			                        <span class="nav-link-text">Parametres</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
 							<li class="nav-item">
     <form method="POST" action="{{ route('logout') }}" id="sidebar-logout-form" class="d-none">
         @csrf
@@ -401,74 +366,124 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-success text-white">
-                <h3 class="modal-title" id="modalLabel">Ajouter un nouvel utilisateur</h3>
+                <h3 class="modal-title" id="modalLabel">Ajouter un nouvel adhérent</h3>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-			
+            
             <form action="{{ route('users.store') }}" method="POST">
                 @csrf
                 
                 <div class="modal-body p-4">
-                    <div class="row g-3">
+                    <!-- SECTION 1 : IDENTITÉ -->
+                    <div class="border-bottom pb-2 mb-3">
+                        <h5 class="text-success"><i class="fa-solid fa-user-check"></i> Identité</h5>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label class="form-label font-weight-bold">Nom Complet</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-user text-muted"></i></span>
-                                <input type="text" name="name" class="form-control" placeholder="Ex: Ismaël Traoré" required>
-                            </div>
+                            <label class="form-label fw-bold">Nom complet <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" placeholder="Ex: IDRISSA ADAMOU GARBA" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label font-weight-bold">Adresse Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-envelope text-muted"></i></span>
-                                <input type="email" name="email" class="form-control" placeholder="exemple@mail.com" required>
-                            </div>
+                            <label class="form-label fw-bold">Fonction</label>
+                            <input type="text" name="fonction" class="form-control" placeholder="Ex: Agent, Cadre, Directeur...">
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2 : CONTACT -->
+                    <div class="border-bottom pb-2 mb-3">
+                        <h5 class="text-success"><i class="fa-solid fa-address-card"></i> Contact</h5>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control" placeholder="exemple@mail.com" required>
                         </div>
 
-                        <div class="row mb-3">
-			<div class="col-md-6">
-				<label class="form-label font-weight-bold">Mot de passe</label>
-				<div class="input-group">
-					<span class="input-group-text bg-ligh"><i class="fa-solid fa-lock"></i></span>
-					<input type="password" name="password" class="form-control border-success" placeholder="Minimum 8 caractères" required>
-				</div>
-			</div>
-    
-			<div class="col-md-6">
-				<label class="form-label font-weight-bold">Confirmer</label>
-				<div class="input-group">
-					<span class="input-group-text bg-ligh"><i class="fa-solid fa-shield-check"></i></span>
-					<input type="password" name="password_confirmation" class="form-control border-success" placeholder="Répéter le mot de passe" required>
-				</div>
-			</div>
-		</div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Téléphone / Contact</label>
+                            <input type="tel" name="contact" class="form-control" placeholder="Ex: 90 00 00 00">
+                        </div>
+                    </div>
 
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Localité</label>
+                            <input type="text" name="localite" class="form-control" placeholder="Ex: Niamey, Zinder, Maradi...">
+                        </div>
+                    </div>
 
-                        <div class="row mb-3">
-							<div class="col-md-6">
-                            <label class="form-label font-weight-bold">Rôle</label>
-                            <select name="role" class="form-select border-left-primary">
-                                <option value="membre" selected>Membre</option>
+                    <!-- SECTION 3 : INFORMATIONS FINANCIÈRES -->
+                    <div class="border-bottom pb-2 mb-3">
+                        <h5 class="text-success"><i class="fa-solid fa-coins"></i> Informations financières</h5>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Salaire de base (FCFA) <span class="text-danger">*</span></label>
+                            <input type="number" name="salaire_base" class="form-control" placeholder="Ex: 400633" required>
+                            <small class="text-muted">Salaire brut mensuel en FCFA</small>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4 : SÉCURITÉ -->
+                    <div class="border-bottom pb-2 mb-3">
+                        <h5 class="text-success"><i class="fa-solid fa-lock"></i> Sécurité</h5>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Mot de passe <span class="text-danger">*</span></label>
+                            <input type="password" name="password" class="form-control" placeholder="Minimum 8 caractères" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Confirmer le mot de passe <span class="text-danger">*</span></label>
+                            <input type="password" name="password_confirmation" class="form-control" placeholder="Répéter le mot de passe" required>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 5 : RÔLE ET STATUT -->
+                    <div class="border-bottom pb-2 mb-3">
+                        <h5 class="text-success"><i class="fa-solid fa-gear"></i> Configuration</h5>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Rôle</label>
+                            <select name="role" class="form-select">
+                                <option value="membre" selected>Membre (Adhérent)</option>
                                 <option value="admin">Administrateur</option>
                             </select>
-							
                         </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label font-weight-bold">Statut</label>
-                            <select name="statut" class="form-select border-left-success">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Statut</label>
+                            <select name="statut" class="form-select">
                                 <option value="actif" selected>Actif</option>
                                 <option value="inactif">Inactif</option>
                                 <option value="suspendu">Suspendu</option>
                             </select>
                         </div>
-						</div>
+                    </div>
+
+                    <!-- MESSAGE D'INFORMATION -->
+                    <div class="alert alert-info mt-2 mb-0">
+                        <i class="fa-solid fa-circle-info"></i> 
+                        <strong>À savoir :</strong>
+                        <ul class="mb-0 mt-1">
+                            <li>Le matricule est généré automatiquement (ex: MUT-2025-0001)</li>
+                            <li>Le taux de cotisation sera calculé automatiquement (1,5% assuré + 1% si conjointe + 0,5% par enfant)</li>
+                            <li>La part État = part assuré × 2</li>
+                        </ul>
                     </div>
                 </div>
+
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-success text-white px-4">Créer le compte</button>
+                    <button type="submit" class="btn btn-success text-white px-4">Créer l'adhérent</button>
                 </div>
             </form>
         </div>
