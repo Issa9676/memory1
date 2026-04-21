@@ -1,26 +1,21 @@
-<!-- Filtre pour les adhérents -->
-<div class="row mb-4">
-    <div class="col-md-8">
-        <form method="GET" action="{{ route('users.index') }}" class="row g-2">
-            <div class="col-auto">
-                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="🔍 Nom, matricule, email...">
-            </div>
-            <div class="col-auto">
-                <select name="statut" class="form-select">
-                    <option value="">Tous les statuts</option>
-                    <option value="actif" {{ request('statut') == 'actif' ? 'selected' : '' }}>Actif</option>
-                    <option value="inactif" {{ request('statut') == 'inactif' ? 'selected' : '' }}>Inactif</option>
-                    <option value="suspendu" {{ request('statut') == 'suspendu' ? 'selected' : '' }}>Suspendu</option>
-                </select>
-            </div>
-            
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Filtrer</button>
-                <a href="{{ route('users.index') }}" class="btn btn-secondary">Réinitialiser</a>
-            </div>
-        </form>
+<form method="GET" action="{{ route('dashboard') }}" class="row g-2">
+    <input type="hidden" name="view" value="membres">
+    <div class="col-auto">
+        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="🔍 Nom, matricule, email...">
     </div>
-</div>
+    <div class="col-auto">
+        <select name="statut" class="form-select">
+            <option value="">Tous les statuts</option>
+            <option value="actif" {{ request('statut') == 'actif' ? 'selected' : '' }}>Actif</option>
+            <option value="inactif" {{ request('statut') == 'inactif' ? 'selected' : '' }}>Inactif</option>
+            <option value="suspendu" {{ request('statut') == 'suspendu' ? 'selected' : '' }}>Suspendu</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Filtrer</button>
+        <a href="{{ route('dashboard', ['view' => 'membres']) }}" class="btn btn-secondary">Réinitialiser</a>
+    </div>
+</form>
 
 <!-- Tableau des adhérents -->
 <div class="tab-content" id="orders-table-tab-content">
@@ -41,7 +36,7 @@
                                 <th class="cell">Taux (%)</th>
                                 <th class="cell">Statut</th>
                                 <th class="cell">Date adhésion</th>
-                                <th class="cell">Actions</th>
+                                <th class="cell" >Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,7 +60,7 @@
                                     </span>
                                 </td>
                                 <td class="cell">{{ $membre->created_at->format('d/m/Y') }}</td>
-                                <td class="cell">
+                                <td colspan="3">
                                     <button type="button" class="btn btn-sm btn-info text-white" 
                                         onclick="remplirModaleEdit({{ json_encode($membre) }})" 
                                         data-bs-toggle="modal" data-bs-target="#modalEditionMembre">
@@ -441,4 +436,18 @@ function mettreAJourTaux(taux) {
     let tauxSpan = document.querySelector(`#taux-${currentUserId}`);
     if (tauxSpan) tauxSpan.innerHTML = `<span class="badge bg-primary">${taux}%</span>`;
 }
+</script>
+
+
+<script>
+// Solution simple : recharger la page quand on ferme la modal des bénéficiaires
+document.addEventListener('DOMContentLoaded', function() {
+    const modalBeneficiaires = document.getElementById('modalBeneficiaires');
+    if (modalBeneficiaires) {
+        modalBeneficiaires.addEventListener('hidden.bs.modal', function() {
+            // Recharge la page pour voir le nouveau taux
+            location.reload();
+        });
+    }
+});
 </script>

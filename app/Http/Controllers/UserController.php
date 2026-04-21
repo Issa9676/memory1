@@ -5,46 +5,41 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\cotisation;
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+   
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
-    {
-        $query = User::where('role', 'membre');
-        
-        // Filtre par recherche (nom, matricule, email)
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('matricule', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-        
-        // Filtre par statut
-        if ($request->filled('statut')) {
-            $query->where('statut', $request->statut);
-        }
-        
-        // Filtre par localité
-        if ($request->filled('localite')) {
-            $query->where('localite', $request->localite);
-        }
-        
-        // Récupérer la liste des localités pour le filtre déroulant
-        $localites = User::where('role', 'membre')
-            ->whereNotNull('localite')
-            ->distinct()
-            ->pluck('localite');
-        
-        $membres = $query->latest()->get();
-        
-        return view('membres.index', compact('membres', 'localites'));
+{
+    $query = User::where('role', 'membre');
+    
+    // 🔍 FILTRE PAR RECHERCHE (nom, matricule, email)
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('matricule', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
     }
+    
+    // 📌 FILTRE PAR STATUT
+    if ($request->filled('statut')) {
+        $query->where('statut', $request->statut);
+    }
+    
+    $membres = $query->latest()->get();
+    
+    // Retourne la vue dashboard avec view=membres
+    return view('dashboard', compact('membres') + ['view' => 'membres']);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -58,24 +53,34 @@ class UserController extends Controller
     /**
      * Generate a unique matricule
      */
-    private function genererMatricule()
-    {
-        $annee = date('Y');
-        $dernier = User::whereYear('created_at', $annee)
-            ->where('role', 'membre')
-            ->orderBy('id', 'desc')
-            ->first();
-        
-        if ($dernier && $dernier->matricule) {
-            $dernierNum = intval(substr($dernier->matricule, -4));
-            $num = $dernierNum + 1;
-        } else {
-            $num = 1;
-        }
-        
-        return 'MUT-' . $annee . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
+   private function genererMatricule()
+{
+    $annee = date('Y');
+    $prefix = 'MUT-' . $annee . '-';
+    
+    // Récupère le dernier numéro utilisé
+    $dernier = User::where('matricule', 'LIKE', $prefix . '%')
+        ->orderBy('matricule', 'desc')
+        ->first();
+    
+    if ($dernier) {
+        // Extrait le numéro (ex: MUT-2026-0003 -> 3)
+        $dernierNumero = (int) substr($dernier->matricule, -4);
+        $nouveauNumero = $dernierNumero + 1;
+    } else {
+        $nouveauNumero = 1;
     }
-
+    
+    $matricule = $prefix . str_pad($nouveauNumero, 4, '0', STR_PAD_LEFT);
+    
+    // Vérifie que le matricule n'existe pas déjà (sécurité)
+    while (User::withTrashed()->where('matricule', $matricule)->exists()) {
+        $nouveauNumero++;
+        $matricule = $prefix . str_pad($nouveauNumero, 4, '0', STR_PAD_LEFT);
+    }
+    
+    return $matricule;
+}
     /**
      * Store a newly created resource in storage.
      */
@@ -134,34 +139,32 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $membre = User::findOrFail($id);
-        
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|min:8|confirmed',
-            'fonction' => 'nullable|string|max:255',
-            'localite' => 'nullable|string|max:255',
-            'contact' => 'nullable|string|max:20',
-            'salaire_base' => 'nullable|numeric|min:0',
-            'role' => 'required|in:admin,membre',
-            'statut' => 'required|in:actif,inactif,suspendu'
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $id,
+        'password' => 'nullable|min:8|confirmed',
+        'fonction' => 'nullable|string|max:255',
+        'localite' => 'nullable|string|max:255',
+        'contact' => 'nullable|string|max:20',
+        'salaire_base' => 'nullable|numeric|min:0',
+        'role' => 'required|in:admin,membre',
+        'statut' => 'required|in:actif,inactif,suspendu'
+    ]);
 
-        $data = $request->only(['name', 'email', 'role', 'statut', 'fonction', 'localite', 'contact', 'salaire_base']);
+    $data = $request->only(['name', 'email', 'role', 'statut', 'fonction', 'localite', 'contact', 'salaire_base']);
 
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
-
-        $membre->update($data);
-
-        // Si le salaire a changé, on peut recalculer les cotisations futures
-        // (optionnel : déclencher un événement)
-
-        return redirect()->route('dashboard', ['view' => 'membres'])->with('success', 'Adhérent mis à jour avec succès !');
+    if ($request->filled('password')) {
+        $data['password'] = Hash::make($request->password);
     }
+
+    User::findOrFail($id)->update($data);
+
+    return redirect()->route('dashboard', ['view' => 'membres'])
+        ->with('success', 'Adhérent mis à jour avec succès !');
+}
+
+       
 
     /**
      * Remove the specified resource from storage.

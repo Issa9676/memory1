@@ -12,6 +12,7 @@ use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\RemboursementController;
 use App\Http\Controllers\EtablissementController;
 use App\Http\Controllers\BeneficiaireController;
+use App\Http\Controllers\dashboardController;
 
 
 Route::get('/', function () {
@@ -124,6 +125,8 @@ Route::get('/beneficiaires/{id}', [BeneficiaireController::class, 'getOne']);
 Route::post('/users/{user}/beneficiaires', [BeneficiaireController::class, 'storeAjax']);
 Route::put('/beneficiaires/{id}', [BeneficiaireController::class, 'updateAjax']);
 Route::delete('/beneficiaires/{id}', [BeneficiaireController::class, 'destroyAjax']);
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/dashboard', [dashboardController::class, 'index'])->name('dashboard');
 });
 
 

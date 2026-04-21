@@ -70,7 +70,7 @@ class User extends Authenticatable
 
     public function cotisations()
     {
-        return $this->hasMany(Cotisation::class); // Notez le C majuscule
+        return $this->hasMany(cotisation::class); // Notez le C majuscule
     }
 
     // ========== LOGIQUE MÉTIER ==========

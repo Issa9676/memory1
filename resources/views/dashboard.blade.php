@@ -1303,31 +1303,76 @@ function openEditEtablissementModal(data) {
 </script>
 
 
-    
-<div class="modal fade" id="modalEditionMembre" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal fade" id="modalEditionMembre" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modifier les informations</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-edit"></i> Modifier les informations de l'adhérent
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form id="formulaireEdition" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nom Complet</label>
-                        <input type="text" name="name" id="edit_name" class="form-control" required>
+                    <!-- IDENTITÉ -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nom Complet <span class="text-danger">*</span></label>
+                            <input type="text" name="name" id="edit_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Matricule</label>
+                            <input type="text" id="edit_matricule" class="form-control" disabled>
+                            <small class="text-muted">Le matricule est généré automatiquement</small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" id="modifier_email" class="form-control" required>
+
+                    <!-- CONTACT -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" id="edit_profil" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Téléphone / Contact</label>
+                            <input type="text" name="contact" id="edit_contact" class="form-control">
+                        </div>
                     </div>
+
+                    <!-- PROFESSION & LOCALISATION -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fonction</label>
+                            <input type="text" name="fonction" id="edit_fonction" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Localité</label>
+                            <input type="text" name="localite" id="edit_localite" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- INFORMATIONS FINANCIÈRES -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Salaire de base (FCFA)</label>
+                            <input type="number" name="salaire_base" id="edit_salaire_base" class="form-control">
+                            <small class="text-muted">Base de calcul de la cotisation</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Taux de cotisation</label>
+                            <input type="text" id="edit_taux" class="form-control" disabled>
+                            <small class="text-muted">Calculé automatiquement selon les bénéficiaires</small>
+                        </div>
+                    </div>
+
+                    <!-- CONFIGURATION -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Rôle</label>
                             <select name="role" id="edit_role" class="form-select">
-                                <option value="membre">Membre</option>
+                                <option value="membre">Membre (Adhérent)</option>
                                 <option value="admin">Administrateur</option>
                             </select>
                         </div>
@@ -1340,10 +1385,22 @@ function openEditEtablissementModal(data) {
                             </select>
                         </div>
                     </div>
-                    <small class="text-muted">Laissez le mot de passe vide pour ne pas le changer.</small>
-                    <div class="mb-3">
-                        <label class="form-label">Nouveau mot de passe</label>
-                        <input type="password" name="password" class="form-control">
+
+                    <!-- MOT DE PASSE -->
+                    <div class="alert alert-info mt-2">
+                        <i class="fas fa-info-circle"></i>
+                        Laissez le mot de passe vide pour ne pas le changer.
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nouveau mot de passe</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Confirmer le mot de passe</label>
+                            <input type="password" name="password_confirmation" class="form-control">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1360,9 +1417,15 @@ function remplirModaleEdit(user) {
     const url = "{{ url('users') }}/" + user.id;
     document.getElementById('formulaireEdition').action = url;
 
-    // Utilise une sécurité pour éviter les erreurs si une donnée manque
+    // Remplir tous les champs
     document.getElementById('edit_name').value = user.name || '';
-    document.getElementById('modifier_email').value = user.email || ''; 
+    document.getElementById('edit_matricule').value = user.matricule || 'Généré automatiquement';
+    document.getElementById('edit_profil').value = user.email || '';
+    document.getElementById('edit_contact').value = user.contact || '';
+    document.getElementById('edit_fonction').value = user.fonction || '';
+    document.getElementById('edit_localite').value = user.localite || '';
+    document.getElementById('edit_salaire_base').value = user.salaire_base || '';
+    document.getElementById('edit_taux').value = (user.taux_cotisation || 'Calculé auto') + '%';
     document.getElementById('edit_role').value = user.role || 'membre';
     document.getElementById('edit_statut').value = user.statut || 'actif';
 }
